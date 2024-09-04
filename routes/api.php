@@ -16,7 +16,7 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('/login', [UserController::class, 'login'])->name('login');
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    
+
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
@@ -26,7 +26,6 @@ Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy'); 
 
 Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
-
 
 
 Route::get('/transactions', [TransactionController::class, 'index']); 
