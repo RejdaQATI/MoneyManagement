@@ -2,38 +2,77 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(
+ *     schema="User",
+ *     title="User",
+ *     description="User model",
+ *     @OA\Property(
+ *         property="id",
+ *         description="The unique identifier of the user",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         description="The name of the user",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         description="The email address of the user",
+ *         type="string",
+ *         format="email"
+ *     ),
+ *     @OA\Property(
+ *         property="password",
+ *         description="The password of the user",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="email_verified_at",
+ *         description="The timestamp when the user email was verified",
+ *         type="string",
+ *         format="date-time"
+ *     ),
+ *     @OA\Property(
+ *         property="profile_photo_url",
+ *         description="URL of the user's profile photo",
+ *         type="string",
+ *         format="uri"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         description="The timestamp when the user was created",
+ *         type="string",
+ *         format="date-time"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at",
+ *         description="The timestamp when the user was last updated",
+ *         type="string",
+ *         format="date-time"
+ *     )
+ * )
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -41,20 +80,10 @@ class User extends Authenticatable
         'two_factor_secret',
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
-     */
     protected $appends = [
         'profile_photo_url',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -68,6 +97,3 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class);
     }
 }
-
-    
-

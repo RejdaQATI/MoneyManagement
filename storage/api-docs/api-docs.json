@@ -1,0 +1,637 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "User API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/transactions": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "List all transactions for the authenticated user",
+                "operationId": "6581469356772e7a74a0d79897544f1a",
+                "responses": {
+                    "200": {
+                        "description": "List of transactions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "transactions": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Transaction"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Create a new transaction",
+                "operationId": "ab765dced58cfe2f620929db31452145",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Transaction"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transaction created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "transaction": {
+                                            "$ref": "#/components/schemas/Transaction"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated"
+                    }
+                }
+            }
+        },
+        "/api/transactions/{id}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get a transaction by ID for the authenticated user",
+                "operationId": "b3d11351fb6ea87ee797d24314e3b7fa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the transaction",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Update an existing transaction",
+                "operationId": "a3de6e068b921a033fb998246070466a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the transaction",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Transaction"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transaction updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Delete a transaction",
+                "operationId": "5b95ee78a4db85f35f43b2b4eea85447",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the transaction",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Transaction deleted"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction not found"
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "summary": "Récupère la liste des utilisateurs",
+                "operationId": "c457726701591d1183b53aa71fc13441",
+                "responses": {
+                    "200": {
+                        "description": "Liste des utilisateurs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "summary": "Enregistre un nouvel utilisateur",
+                "operationId": "2f25885f3b6f61ca11724ec302d2e439",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User Created Successfully"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "your-api-token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "summary": "Connecte un utilisateur existant",
+                "operationId": "0fc9610184083ac6dddab2c63139225a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Connexion réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "your-api-token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Erreur de validation ou d'authentification",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error or Invalid credentials"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "summary": "Récupère un utilisateur par ID",
+                "operationId": "36a33ff774d5cba33c039dec2c3e0287",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de l'utilisateur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Met à jour les informations d'un utilisateur",
+                "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "role": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Supprime un utilisateur",
+                "operationId": "fa56cffde745d3f152f95cbacd936c0b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur supprimé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "User deleted successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "summary": "Déconnecte l'utilisateur actuel",
+                "operationId": "67d5147477c548bfbc3f982833bbc7bd",
+                "responses": {
+                    "200": {
+                        "description": "Déconnexion réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Utilisateur non authentifié"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Transaction": {
+                "title": "Transaction",
+                "description": "Transaction model",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the transaction",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "description": "The name of the transaction",
+                        "type": "string"
+                    },
+                    "amount": {
+                        "description": "The amount of the transaction",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "description": {
+                        "description": "A description of the transaction",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "The type of the transaction (e.g., credit or debit)",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "description": "The ID of the user associated with the transaction",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "description": "The timestamp when the transaction was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "The timestamp when the transaction was last updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the user",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "description": "The name of the user",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The email address of the user",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "description": "The password of the user",
+                        "type": "string"
+                    },
+                    "email_verified_at": {
+                        "description": "The timestamp when the user email was verified",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "profile_photo_url": {
+                        "description": "URL of the user's profile photo",
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "created_at": {
+                        "description": "The timestamp when the user was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "The timestamp when the user was last updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Transactions",
+            "description": "Operations related to transactions"
+        }
+    ]
+}

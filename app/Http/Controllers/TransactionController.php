@@ -1,65 +1,165 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Transaction;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
+use OpenApi\Annotations as OA;
 
-
+/**
+ * @OA\Tag(
+ *     name="Transactions",
+ *     description="Operations related to transactions"
+ * )
+ */
 class TransactionController extends Controller
 {
+    
+
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/transactions",
+     *     summary="List all transactions for the authenticated user",
+     *     tags={"Transactions"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of transactions",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="transactions",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Transaction")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
-        $transaction = Transaction::all();
+        $userId = auth()->id();
+        $transactions = Transaction::where('user_id', $userId)->get();
         return response()->json([
-            'transactions' => $transaction
+            'transactions' => $transactions
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/transactions",
+     *     summary="Create a new transaction",
+     *     tags={"Transactions"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Transaction")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Transaction created",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="transaction",
+     *                 ref="#/components/schemas/Transaction"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="User not authenticated"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
-    
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'amount' => 'required',
             'description' => 'nullable',
             'type' => 'required|string',
-    
         ]);
-    
-  
+
         $userId = auth()->id();
-    
+
         if (!$userId) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
+
         $validatedData['user_id'] = $userId;
         $transaction = Transaction::create($validatedData);
+
         return response()->json([
             'transaction' => $transaction
-        ]);
+        ], 201);
     }
-    
+
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/transactions/{id}",
+     *     summary="Get a transaction by ID for the authenticated user",
+     *     tags={"Transactions"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the transaction",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Transaction details",
+     *         @OA\JsonContent(ref="#/components/schemas/Transaction")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Transaction not found"
+     *     )
+     * )
      */
+    public function show(string $id)
+    {
+        $userId = auth()->id();
+        $transaction = Transaction::where('id', $id)->where('user_id', $userId)->first();
 
-        public function show(string $id)
-        {
-            $transaction = Transaction::find($id);
-            return $transaction;
+        if (!$transaction) {
+            return response()->json(['error' => 'Transaction not found'], 404);
         }
-    
+
+        return $transaction;
+    }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/transactions/{id}",
+     *     summary="Update an existing transaction",
+     *     tags={"Transactions"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the transaction",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/Transaction")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Transaction updated",
+     *         @OA\JsonContent(ref="#/components/schemas/Transaction")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Transaction not found"
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {
@@ -70,21 +170,54 @@ class TransactionController extends Controller
             'type' => 'nullable|string',
             'date' => 'nullable|date',
         ]);
-        $transaction = Transaction::find($id);
+
+        $userId = auth()->id();
+        $transaction = Transaction::where('id', $id)->where('user_id', $userId)->first();
+
+        if (!$transaction) {
+            return response()->json(['error' => 'Transaction not found'], 404);
+        }
+
         $transaction->update($request->all());
         return $transaction;
-
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/transactions/{id}",
+     *     summary="Delete a transaction",
+     *     tags={"Transactions"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the transaction",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Transaction deleted",
+     *         @OA\JsonContent(
+     *             type="string",
+     *             example="Transaction deleted"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Transaction not found"
+     *     )
+     * )
      */
- 
     public function destroy(string $id)
     {
-        $transaction = Transaction::find($id);
+        $userId = auth()->id();
+        $transaction = Transaction::where('id', $id)->where('user_id', $userId)->first();
+
+        if (!$transaction) {
+            return response()->json(['error' => 'Transaction not found'], 404);
+        }
+
         $transaction->delete();
-        return 'Transaction deleted';
+        return response()->json(['message' => 'Transaction deleted']);
     }
 }
-
