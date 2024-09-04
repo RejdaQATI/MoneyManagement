@@ -10,7 +10,6 @@ Backend développé en Laravel pour une application de gestion des finances pers
 - **Gestion des utilisateurs** : Création, lecture, mise à jour et suppression.
 - **Gestion des transactions** : Ajout, affichage, modification et suppression.
 
-## Installation
 
 ### Prérequis
 
