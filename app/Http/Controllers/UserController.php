@@ -8,8 +8,16 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * @OA\Info(title="User API", version="1.0.0")
+ * @OA\Info(title="Mon API", version="1.0.0")
+ * @OA\Server(url="http://localhost:8000")
+ * @OA\SecurityScheme(
+ *     securityScheme="BearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT"
+ * )
  */
+
 class UserController extends Controller
 {
     /**
@@ -239,7 +247,6 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required',
-            'role' => 'required',
         ]);
         $user = User::find($id);
         $user->update($request->all());

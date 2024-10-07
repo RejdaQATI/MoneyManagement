@@ -220,4 +220,31 @@ class TransactionController extends Controller
         $transaction->delete();
         return response()->json(['message' => 'Transaction deleted']);
     }
+
+    
+    public function getTotalBalance()
+    {
+        $userId = auth()->id();
+        $totalIncome = Transaction::where('user_id', $userId)->where('type', 'income')->sum('amount');
+        $totalExpenses = Transaction::where('user_id', $userId)->where('type', 'expense')->sum('amount');
+        $totalBalance = $totalIncome - $totalExpenses;
+    
+        return response()->json(['total_balance' => $totalBalance]);
+    }
+    
+    public function getTotalIncome()
+    {
+
+        $userId = auth()->id();
+        $totalIncome = Transaction::where('user_id', $userId)->where('type', 'income')->sum('amount');
+        return response()->json(['total_income' => $totalIncome]);
+    }
+    
+    public function getTotalExpenses()
+    {
+        $userId = auth()->id();
+        $totalExpenses = Transaction::where('user_id', $userId)->where('type', 'expense')->sum('amount');
+        return response()->json(['total_expenses' => $totalExpenses]);
+    }
+    
 }

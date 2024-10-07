@@ -17,6 +17,16 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
+
+  
+        Route::get('/total-balance', [TransactionController::class, 'getTotalBalance']);
+    
+        Route::get('/total-income', [TransactionController::class, 'getTotalIncome']);
+    
+        Route::get('/total-expenses', [TransactionController::class, 'getTotalExpenses']);
+
+    
+
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
