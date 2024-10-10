@@ -27,6 +27,7 @@ class UserControllerTest extends TestCase
                     'email' => 'user@example.com'
                 ]);
     }
+
     public function test_delete_user()
     {
         $user = User::create([
@@ -43,8 +44,6 @@ class UserControllerTest extends TestCase
                 ->assertSee('User deleted successfully');
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
-
-
     public function test_update_user()
 {
     $user = User::create([
